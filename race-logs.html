@@ -383,15 +383,15 @@
                 isPR: false
             },
             // Add more races here - examples below:
-            // {
-            //     date: '2024-XX-XX',
-            //     race: 'Example Half Marathon',
-            //     distance: 'half',
-            //     time: '1:35:00',
-            //     pace: '7:15/mi',
-            //     notes: 'Great race, negative split.',
-            //     isPR: true
-            // },
+            {
+                 date: '2022-09-11',
+                 race: 'Santa Monica Classic',
+                 distance: '10k',
+                 time: '56:40',
+                 pace: '9:08/mi',
+                 notes: 'First ever race!.',
+                 isPR: true
+             },
             // {
             //     date: '2024-XX-XX',
             //     race: 'Example 10K',
@@ -416,7 +416,9 @@
         races.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         function formatDate(dateString) {
-            const date = new Date(dateString);
+            // Parse the date string manually to avoid timezone issues
+            const [year, month, day] = dateString.split('-').map(Number);
+            const date = new Date(year, month - 1, day); // month is 0-indexed
             return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
         }
 
