@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Race Log - Running Journal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fafafa;
+        }
+
+        header {
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            display: block;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #667eea;
+        }
+
+        .nav-link.active {
+            color: #667eea;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            min-width: 280px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: none;
+            margin-top: 0.5rem;
+        }
+
+        .dropdown.active {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1.25rem;
+            color: #333;
+            text-decoration: none;
+            display: block;
+            transition: background 0.2s;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f8f8;
+            color: #667eea;
+        }
+
+        .hero {
+            padding: 3rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero .subtitle {
+            color: #666;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.5rem;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            color: #333;
+        }
+
+        .filter-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .race-log-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f8f8f8;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 500;
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pr-badge {
+            display: inline-block;
+            background: #ffd700;
+            color: #333;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .distance-badge {
+            display: inline-block;
+            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .distance-marathon {
+            background: #667eea;
+            color: white;
+        }
+
+        .distance-half {
+            background: #f093fb;
+            color: white;
+        }
+
+        .distance-10k {
+            background: #4facfe;
+            color: white;
+        }
+
+        .distance-5k {
+            background: #43e97b;
+            color: white;
+        }
+
+        .notes-cell {
+            color: #666;
+            font-size: 0.9rem;
+            max-width: 300px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .race-log-table {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 700px;
+            }
+
+            .filter-buttons {
+                justify-content: flex-start;
+            }
+
+            .filter-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Running Journal</div>
+                <nav>
+                    <div class="nav-item">
+                        <a href="index.html" class="nav-link">Home</a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="marathons.html" class="nav-link">Marathon Reports</a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="race-log.html" class="nav-link active">Race Log</a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="container">
+            <h1>Race Log</h1>
+            <p class="subtitle">Complete race history</p>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterRaces('all')">All Races</button>
+            <button class="filter-btn" onclick="filterRaces('marathon')">Marathon</button>
+            <button class="filter-btn" onclick="filterRaces('half')">Half Marathon</button>
+            <button class="filter-btn" onclick="filterRaces('10k')">10K</button>
+            <button class="filter-btn" onclick="filterRaces('5k')">5K</button>
+        </div>
+
+        <div class="race-log-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Race</th>
+                        <th>Distance</th>
+                        <th>Time</th>
+                        <th>Pace</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="raceTableBody">
+                    <!-- Races will be populated by JavaScript -->
+                </tbody>
+            </table>
+            <div id="noResults" class="no-results" style="display: none;">
+                No races found for this filter.
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Keep running, keep exploring 🏃</p>
+        </div>
+    </footer>
+
+    <script>
+        // Race data - add your races here
+        const races = [
+            {
+                date: '2026-01-18',
+                race: 'Carlsbad Marathon',
+                distance: 'marathon',
+                time: '3:10:52',
+                pace: '7:17/mi',
+                notes: 'PR! Felt strong throughout, slight calf cramps at the end.',
+                isPR: true
+            },
+            {
+                date: '2025-06-01',
+                race: 'Rock \'n\' Roll San Diego Marathon',
+                distance: 'marathon',
+                time: '3:31:51',
+                pace: '8:06/mi',
+                notes: 'Cramps started at mile 18, but pushed through.',
+                isPR: false
+            },
+            {
+                date: '2023-05-07',
+                race: 'Orange County Marathon',
+                distance: 'marathon',
+                time: '4:22:53',
+                pace: '10:02/mi',
+                notes: 'First marathon! Learned a lot about fueling and pacing.',
+                isPR: false
+            },
+            // Add more races here - examples below:
+            // {
+            //     date: '2024-XX-XX',
+            //     race: 'Example Half Marathon',
+            //     distance: 'half',
+            //     time: '1:35:00',
+            //     pace: '7:15/mi',
+            //     notes: 'Great race, negative split.',
+            //     isPR: true
+            // },
+            // {
+            //     date: '2024-XX-XX',
+            //     race: 'Example 10K',
+            //     distance: '10k',
+            //     time: '38:30',
+            //     pace: '6:12/mi',
+            //     notes: 'Fast and flat course.',
+            //     isPR: false
+            // },
+            // {
+            //     date: '2024-XX-XX',
+            //     race: 'Example 5K',
+            //     distance: '5k',
+            //     time: '18:45',
+            //     pace: '6:02/mi',
+            //     notes: 'PR! Felt great.',
+            //     isPR: true
+            // }
+        ];
+
+        // Sort races by date (newest first)
+        races.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function getDistanceClass(distance) {
+            const classes = {
+                'marathon': 'distance-marathon',
+                'half': 'distance-half',
+                '10k': 'distance-10k',
+                '5k': 'distance-5k'
+            };
+            return classes[distance] || '';
+        }
+
+        function getDistanceLabel(distance) {
+            const labels = {
+                'marathon': 'Marathon',
+                'half': 'Half Marathon',
+                '10k': '10K',
+                '5k': '5K'
+            };
+            return labels[distance] || distance;
+        }
+
+        function renderRaces(filter = 'all') {
+            const tbody = document.getElementById('raceTableBody');
+            const noResults = document.getElementById('noResults');
+            tbody.innerHTML = '';
+
+            const filteredRaces = filter === 'all' 
+                ? races 
+                : races.filter(race => race.distance === filter);
+
+            if (filteredRaces.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+
+            noResults.style.display = 'none';
+
+            filteredRaces.forEach(race => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${formatDate(race.date)}</td>
+                    <td>
+                        ${race.race}
+                        ${race.isPR ? '<span class="pr-badge">PR</span>' : ''}
+                    </td>
+                    <td>
+                        <span class="distance-badge ${getDistanceClass(race.distance)}">
+                            ${getDistanceLabel(race.distance)}
+                        </span>
+                    </td>
+                    <td><strong>${race.time}</strong></td>
+                    <td>${race.pace}</td>
+                    <td class="notes-cell">${race.notes || '-'}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function filterRaces(distance) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Render filtered races
+            renderRaces(distance);
+        }
+
+        // Initial render
+        renderRaces('all');
+    </script>
+</body>
+</html>
