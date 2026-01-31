@@ -329,8 +329,8 @@
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Race</th>
                         <th>Location</th>
+                        <th>Race</th>
                         <th>Distance</th>
                         <th>Time</th>
                         <th>Pace</th>
@@ -358,8 +358,8 @@
         const races = [
             {
                 date: '2026-01-18',
-                race: 'Carlsbad Marathon',
                 location: 'Carlsbad, CA',
+                race: 'Carlsbad Marathon',
                 distance: 'marathon',
                 time: '3:10:52',
                 pace: '7:17/mi',
@@ -368,8 +368,8 @@
             },
             {
                 date: '2025-06-01',
-                race: 'Rock \'n\' Roll San Diego Marathon',
                 location: 'San Diego, CA',
+                race: 'Rock \'n\' Roll San Diego Marathon',
                 distance: 'marathon',
                 time: '3:31:51',
                 pace: '8:06/mi',
@@ -378,8 +378,8 @@
             },
             {
                 date: '2023-05-07',
-                race: 'Orange County Marathon',
                 location: 'Costa Mesa, CA',
+                race: 'Orange County Marathon',
                 distance: 'marathon',
                 time: '4:22:53',
                 pace: '10:02/mi',
@@ -389,8 +389,8 @@
             // Add more races here - examples below:
             {
                  date: '2022-09-11',
-                 race: 'Santa Monica Classic 10k',
                  location: 'Santa Monica, CA',
+                 race: 'Santa Monica Classic 10k',
                  distance: '10k',
                  time: '56:40',
                  pace: '9:08/mi',
@@ -399,8 +399,8 @@
              },
              {
                  date: '2022-11-06',
-                 race: 'Run Malibu 5k',
                  location: 'Malibu, CA',
+                 race: 'Run Malibu 5k',
                  distance: '5k',
                  time: '23:37',
                  pace: '7:36/mi',
@@ -409,8 +409,8 @@
              },
              {
                  date: '2023-01-15',
-                 race: 'Rose Bowl Half Marathon',
                  location: 'Pasadena, CA',
+                 race: 'Rose Bowl Half Marathon',
                  distance: 'half',
                  time: '1:57:54',
                  pace: '9:00/mi',
@@ -419,8 +419,8 @@
              },
              {
                  date: '2023-03-26',
-                 race: 'Reaching for the Cure 5k',
                  location: 'Irvine, CA',
+                 race: 'Reaching for the Cure 5k',
                  distance: '5k',
                  time: '21:04',
                  pace: '6:46/mi',
@@ -429,8 +429,8 @@
              },
              {
                  date: '2023-10-15',
-                 race: 'Long Beach Half Marathon',
                  location: 'Long Beach, CA',
+                 race: 'Long Beach Half Marathon',
                  distance: 'half',
                  time: '1:44:54',
                  pace: '8:00/mi',
@@ -439,8 +439,8 @@
              },
              {
                  date: '2024-01-21',
-                 race: 'Rose Bowl Half Marathon',
                  location: 'Pasadena, CA',
+                 race: 'Rose Bowl Half Marathon',
                  distance: 'half',
                  time: '2:50:54',
                  pace: '13:03/mi',
@@ -499,11 +499,11 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${formatDate(race.date)}</td>
+                    <td>${race.location}</td>
                     <td>
                         ${race.race}
                         ${race.isPR ? '<span class="pr-badge">PR</span>' : ''}
                     </td>
-                    <td>${race.location}</td>
                     <td>
                         <span class="distance-badge ${getDistanceClass(race.distance)}">
                             ${getDistanceLabel(race.distance)}
