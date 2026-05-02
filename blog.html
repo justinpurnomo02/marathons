@@ -146,6 +146,7 @@
             border-left: 3px solid transparent;
             display: flex;
             overflow: hidden;
+            height: 180px;
         }
 
         .blog-card:hover {
@@ -155,10 +156,12 @@
         }
 
         .blog-card-img {
-            width: 130px;
-            min-width: 130px;
-            height: 130px;
+            width: 180px;
+            min-width: 180px;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .blog-card-img img {
@@ -169,13 +172,18 @@
         }
 
         .blog-card-body {
-            padding: 2rem 2.5rem;
+            padding: 1.5rem 2rem;
             flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         @media (max-width: 600px) {
             .blog-card {
                 flex-direction: column;
+                height: auto;
             }
             .blog-card-img {
                 width: 100%;
@@ -347,7 +355,7 @@
         <div class="blog-list active" id="blogList">
             <div class="blog-card" onclick="showPost('boxing')">
                 <div class="blog-card-img">
-                    <img src="images/square_boxing_gloves.png" alt="Boxing gloves">
+                    <img src="images/boxing_gloves.png" alt="Boxing gloves">
                 </div>
                 <div class="blog-card-body">
                     <div class="blog-card-date">April 29, 2026</div>
