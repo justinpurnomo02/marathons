@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog - Running Journal</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -23,103 +27,315 @@
             z-index: 100;
         }
 
-        .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
-        .header-content { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.5rem; font-weight: 500; color: #333; }
-        nav { display: flex; gap: 2rem; }
-        .nav-item { position: relative; }
-        .nav-link {
-            color: #333; text-decoration: none; padding: 0.5rem 1rem;
-            display: block; font-size: 1rem; transition: color 0.2s; cursor: pointer;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
-        .nav-link:hover { color: #667eea; }
-        .nav-link.active { color: #667eea; font-weight: 500; }
 
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            display: block;
+            font-size: 1rem;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: #667eea;
+        }
+
+        .nav-link.active {
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        /* Dropdown for Marathon Reports */
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            min-width: 280px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: none;
+            margin-top: 0.5rem;
+        }
+
+        .dropdown.active {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1.25rem;
+            color: #333;
+            text-decoration: none;
+            display: block;
+            transition: background 0.2s;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f8f8;
+            color: #667eea;
+        }
+
+        .hero {
+            padding: 3rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero .subtitle {
+            color: #666;
+        }
+
+        /* Blog list view */
+        .blog-list {
+            display: none;
+        }
+
+        .blog-list.active {
+            display: block;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: box-shadow 0.2s, transform 0.2s;
+            border-left: 3px solid transparent;
+            display: flex;
+            overflow: hidden;
+            height: 180px;
+        }
+
+        .blog-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-1px);
+            border-left-color: #667eea;
+        }
+
+        .blog-card-img {
+            width: 180px;
+            min-width: 180px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .blog-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .blog-card-body {
+            padding: 1.5rem 2rem;
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        @media (max-width: 600px) {
+            .blog-card {
+                flex-direction: column;
+                height: auto;
+            }
+            .blog-card-img {
+                width: 100%;
+                min-width: unset;
+                height: 180px;
+            }
+        }
+
+        .blog-card-date {
+            font-size: 0.85rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-card-title {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 0.75rem;
+        }
+
+        .blog-card-excerpt {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .read-more {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #667eea;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Blog post view */
+        .blog-post {
+            display: none;
+        }
+
+        .blog-post.active {
+            display: block;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .back-btn:hover {
+            opacity: 0.75;
+        }
+
+        .post-container {
+            background: white;
+            border-radius: 8px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .post-header {
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .post-date {
+            font-size: 0.85rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-title {
+            font-size: 2rem;
+            font-weight: 400;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        .post-body p {
+            margin-bottom: 1.25rem;
+            color: #444;
+            line-height: 1.85;
+            font-size: 1.05rem;
+        }
+
+        .post-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* Hamburger */
         .hamburger {
-            display: none; flex-direction: column; gap: 5px;
-            cursor: pointer; padding: 4px; background: none; border: none;
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+            background: none;
+            border: none;
         }
         .hamburger span {
-            display: block; width: 22px; height: 2px;
-            background: #333; border-radius: 2px; transition: all 0.25s;
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: #333;
+            border-radius: 2px;
+            transition: all 0.25s;
         }
         .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .hamburger.open span:nth-child(2) { opacity: 0; }
         .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
         .mobile-nav {
-            display: none; flex-direction: column;
-            background: white; border-top: 1px solid #f0f0f0; padding: 0.5rem 0;
+            display: none;
+            flex-direction: column;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            padding: 0.5rem 0;
         }
         .mobile-nav.open { display: flex; }
         .mobile-nav .nav-link { padding: 0.75rem 2rem; border-bottom: 1px solid #f8f8f8; }
         .mobile-nav .nav-link:last-child { border-bottom: none; }
 
-        .hero { padding: 3rem 0; text-align: center; margin-bottom: 2rem; }
-        .hero h1 { font-size: 2.5rem; font-weight: 300; letter-spacing: -0.5px; margin-bottom: 0.5rem; }
-        .hero .subtitle { color: #666; }
-
-        .blog-list { display: none; }
-        .blog-list.active { display: block; }
-
-        .blog-card {
-            background: white; border-radius: 8px; padding: 2rem 2.5rem;
-            margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            cursor: pointer; transition: box-shadow 0.2s, transform 0.2s;
-            border-left: 3px solid transparent;
-        }
-        .blog-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: translateY(-1px); border-left-color: #667eea; }
-        .blog-card-date { font-size: 0.85rem; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
-        .blog-card-title { font-size: 1.4rem; font-weight: 500; color: #333; margin-bottom: 0.75rem; }
-        .blog-card-excerpt { color: #666; font-size: 0.95rem; line-height: 1.7; }
-        .read-more { display: inline-block; margin-top: 1rem; color: #667eea; font-size: 0.9rem; font-weight: 500; }
-
-        .blog-post { display: none; }
-        .blog-post.active { display: block; }
-
-        .back-btn {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            color: #667eea; cursor: pointer; font-size: 0.95rem; font-weight: 500;
-            margin-bottom: 2rem; background: none; border: none; padding: 0;
-        }
-        .back-btn:hover { opacity: 0.75; }
-
-        .post-container {
-            background: white; border-radius: 8px; padding: 3rem;
-            margin-bottom: 3rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .post-header { border-bottom: 1px solid #e0e0e0; padding-bottom: 1.5rem; margin-bottom: 2rem; }
-        .post-date { font-size: 0.85rem; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
-        .post-title { font-size: 2rem; font-weight: 400; color: #333; line-height: 1.3; }
-        .post-body p { margin-bottom: 1.25rem; color: #444; line-height: 1.85; font-size: 1.05rem; }
-        .post-body p:last-child { margin-bottom: 0; }
-
-        footer { text-align: center; padding: 3rem 0; color: #999; font-size: 0.9rem; }
-
         @media (max-width: 640px) {
+            .hero h1 { font-size: 2rem; }
+            .post-container { padding: 1.5rem; border-radius: 0; box-shadow: none; }
+            .post-title { font-size: 1.5rem; }
             nav { display: none; }
             .hamburger { display: flex; }
-            .hero { padding: 2rem 0 1rem; }
-            .hero h1 { font-size: 2rem; }
-
-            .blog-card {
-                border-radius: 0; padding: 1.5rem 1.25rem;
-                box-shadow: none; border-top: 1px solid #ebebeb;
-                border-bottom: 1px solid #ebebeb; border-left: none; margin-bottom: 0.5rem;
-            }
-            .blog-card:hover { transform: none; box-shadow: none; border-left: none; }
-
-            .post-container { border-radius: 0; padding: 1.5rem 1.25rem; box-shadow: none; }
-            .post-title { font-size: 1.5rem; }
-
-            .post-body img[style*="float"] {
-                float: none !important; width: 100% !important;
-                margin: 0 0 0.5rem 0 !important;
-            }
-            .post-body p[style*="float"] {
-                float: none !important; width: 100% !important;
-                margin: 0 0 1rem 0 !important;
-            }
+            .post-body img[style*="float"] { float: none !important; width: 100% !important; margin: 0 0 0.5rem 0 !important; }
+            .post-body p[style*="float"] { float: none !important; width: 100% !important; margin: 0 0 1rem 0 !important; }
         }
     </style>
 </head>
@@ -129,10 +345,18 @@
             <div class="header-content">
                 <div class="logo">Running Journal</div>
                 <nav>
-                    <div class="nav-item"><a href="index.html" class="nav-link">Home</a></div>
-                    <div class="nav-item"><a href="marathons.html" class="nav-link">Marathon Reports</a></div>
-                    <div class="nav-item"><a href="blog.html" class="nav-link active">Blog</a></div>
-                    <div class="nav-item"><a href="race-logs.html" class="nav-link">Race Log</a></div>
+                    <div class="nav-item">
+                        <a href="index.html" class="nav-link">Home</a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="marathons.html" class="nav-link">Marathon Reports</a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="blog.html" class="nav-link active">Blog</a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="race-logs.html" class="nav-link">Race Log</a>
+                    </div>
                 </nav>
                 <button class="hamburger" id="hamburger" aria-label="Toggle menu">
                     <span></span><span></span><span></span>
@@ -155,15 +379,23 @@
     </div>
 
     <main class="container">
+
+        <!-- Blog List -->
         <div class="blog-list active" id="blogList">
             <div class="blog-card" onclick="showPost('boxing')">
-                <div class="blog-card-date">April 29, 2026</div>
-                <div class="blog-card-title">A marathon runner walks into a boxing gym</div>
-                <div class="blog-card-excerpt">Three months ago, I walked into a boxing gym without much expectation. I needed a break from running, and something about Naoya Inoue's precision and power on my YouTube feed got me curious enough to try it myself...</div>
-                <span class="read-more">Read more →</span>
+                <div class="blog-card-img">
+                    <img src="images/boxing_gloves.png" alt="Boxing gloves">
+                </div>
+                <div class="blog-card-body">
+                    <div class="blog-card-date">April 29, 2026</div>
+                    <div class="blog-card-title">A marathon runner walks into a boxing gym</div>
+                    <div class="blog-card-excerpt">Three months ago, I walked into a boxing gym without much expectation...</div>
+                    <span class="read-more">Read more →</span>
+                </div>
             </div>
         </div>
 
+        <!-- Boxing Post -->
         <div class="blog-post" id="post-boxing">
             <button class="back-btn" onclick="showList()">← Back to Blog</button>
             <div class="post-container">
@@ -178,7 +410,9 @@
                     <p style="float: right; clear: right; width: 280px; color: #666; font-size: 0.85rem; font-style: italic; text-align: center; margin: -0.5rem 0 1rem 1.5rem;">Naoya Inoue landing a strike.</p>
 
                     <p>This is a quick reflection on those three months: what it was like learning as a complete beginner, and why I kept showing up.</p>
+
                     <p>Going in, I knew boxing would be technical. Running was my main form of physical activity, and that's about as straightforward as it gets. In contrast, boxing felt unnatural. Even throwing a simple jab with proper footwork felt really awkward at first, like my mind and my body weren't in agreement.</p>
+
                     <p>Once combinations got involved, it got even harder. I was constantly trying to remember the correct sequence of punches (i.e., jab, cross, hook, etc.) while also thinking about footwork, balance, and timing.</p>
 
                     <div style="clear: both;"></div>
@@ -189,16 +423,21 @@
                     <p style="float: left; clear: left; width: 280px; color: #666; font-size: 0.85rem; font-style: italic; text-align: center; margin: -0.5rem 1.5rem 1rem 0;">Me, Luke, and the coach.</p>
 
                     <p>One thing that surprised me was how much of my running fitness carried over. There were conditioning classes after the main boxing sessions, and I honestly handled those pretty comfortably. I remember the coach's wife joking "I want whatever Justin's on", which I thought was hilarious.</p>
+
                     <p>But I think this made me realize that fitness wasn't as separate as I initially thought. I definitely leaned on distance running as a sort of excuse to neglect other aspects of fitness, namely strength training. If I was primarily a marathon runner who was averaging 70 miles per week, it didn't feel like it made sense to build muscle that would ultimately weigh me down on long runs.</p>
+
                     <p>However, boxing left me so sore that there became days where running would have probably been detrimental to my physical health. In order to still be active during these off days, I picked up my weights for the first time in months. Instead of running six times a week, I began to run only four times a week, while also incorporating both boxing and lifting.</p>
 
                     <div style="clear: both;"></div>
 
-                    <p>Overall, I felt like a stronger person. It definitely helped seeing tangible results on my body, and I started to become more confident. External validation definitely helped too if I have to be completely honest. My coworkers looked at me with hand wraps and thought it was the coolest thing ever. My friends naturally became very curious about my boxing lessons, as it's not often you come across a boxer.</p>
-                    <p>My goal was to eventually spar, but I never got around to it. Once I started thinking about it seriously, the gym was planning to revamp the sparring classes, which meant they were going to be on hold for a while. So the timing felt right to step away for now, especially after watching Sabastian Sawe and Yomif Kejelcha recently break the two-hour barrier at London. That reminded me of how badly I wanted to go sub-three. I would definitely like to return to boxing after my next marathon though — it taught me a lot, and I appreciated the opportunity to experience new things and learn new skills.</p>
+                    <p>Overall though, I felt like a stronger person. Seeing tangible results on my body gave me confidence and encouraged me to keep coming back. External validation definitely helped too if I have to be completely honest. My coworkers looked at me with my hand wraps on and would comment about how cool they were. My friends naturally became very curious about my boxing lessons, and I was more than happy to share about my experience.</p>
+
+                    <p>My goal was to eventually spar, but I never got around to it. Once I started thinking about it seriously, the gym was planning to revamp the sparring classes, which meant they were going to be on hold for a while. So the timing felt right to step away for now, especially after watching Sabastian Sawe and Yomif Kejelcha recently break the two-hour barrier at the London marathon. That reminded me of how badly I wanted to run sub-three. I would definitely like to return to boxing after my next marathon though — it taught me a lot, and I appreciated the opportunity to experience new things and learn new skills.
+                    </p>
                 </div>
             </div>
         </div>
+
     </main>
 
     <footer>
@@ -225,6 +464,8 @@
             document.getElementById('blogList').classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+
     </script>
 </body>
 </html>
