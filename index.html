@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Me - Running Journal</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -39,16 +36,8 @@
             align-items: center;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 500;
-            color: #333;
-        }
-
-        nav {
-            display: flex;
-            gap: 2rem;
-        }
+        .logo { font-size: 1.5rem; font-weight: 500; color: #333; }
+        nav { display: flex; gap: 2rem; }
 
         .nav-link {
             color: #333;
@@ -58,32 +47,12 @@
             font-size: 1rem;
             transition: color 0.2s;
         }
+        .nav-link:hover { color: #667eea; }
+        .nav-link.active { color: #667eea; font-weight: 500; }
 
-        .nav-link:hover {
-            color: #667eea;
-        }
-
-        .nav-link.active {
-            color: #667eea;
-            font-weight: 500;
-        }
-
-        .hero {
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: 300;
-            letter-spacing: -0.5px;
-            margin-bottom: 1rem;
-        }
-
-        .hero .subtitle {
-            color: #666;
-            font-size: 1.2rem;
-        }
+        .hero { padding: 4rem 0; text-align: center; }
+        .hero h1 { font-size: 3rem; font-weight: 300; letter-spacing: -0.5px; margin-bottom: 1rem; }
+        .hero .subtitle { color: #666; font-size: 1.2rem; }
 
         .about-content {
             background: white;
@@ -93,12 +62,7 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .about-content h2 {
-            font-size: 1.8rem;
-            font-weight: 400;
-            margin-bottom: 1.5rem;
-            color: #333;
-        }
+        .about-content h2 { font-size: 1.8rem; font-weight: 400; margin-bottom: 1.5rem; color: #333; }
 
         .about-content p {
             margin-bottom: 1.5rem;
@@ -106,59 +70,53 @@
             line-height: 1.8;
             font-size: 1.05rem;
         }
+        .about-content p:last-child { margin-bottom: 0; }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-        }
+        .chart-section { margin: 2.5rem 0 0; }
 
-        .stat-card {
-            background: #f8f8f8;
-            padding: 2rem;
-            border-radius: 6px;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 500;
-            color: #667eea;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 0.95rem;
+        .chart-label {
+            font-size: 0.75rem;
+            color: #aaa;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
         }
 
-        footer {
-            text-align: center;
-            padding: 3rem 0;
-            color: #999;
-            font-size: 0.9rem;
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 260px;
+            cursor: crosshair;
         }
+
+        /* Custom tooltip */
+        .chart-tooltip {
+            position: absolute;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 0.6rem 0.85rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            font-size: 0.88rem;
+            line-height: 1.5;
+            white-space: nowrap;
+            z-index: 10;
+        }
+        .chart-tooltip.visible { opacity: 1; }
+        .chart-tooltip .tt-title { font-weight: 600; color: #222; margin-bottom: 0.1rem; }
+        .chart-tooltip .tt-sub { color: #888; font-size: 0.8rem; }
+        .chart-tooltip .tt-time { font-weight: 700; color: #333; margin-top: 0.2rem; font-size: 0.95rem; }
+        .chart-tooltip .tt-pr { color: #3a7bd5; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.1rem; }
+
+        footer { text-align: center; padding: 3rem 0; color: #999; font-size: 0.9rem; }
 
         @media (max-width: 600px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .about-content {
-                padding: 2rem;
-            }
-
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            nav {
-                gap: 1rem;
-            }
+            .hero h1 { font-size: 2rem; }
+            .about-content { padding: 2rem; }
+            .header-content { flex-direction: column; gap: 1rem; }
         }
     </style>
 </head>
@@ -187,29 +145,28 @@
     <main class="container">
         <div class="about-content">
             <h2>Welcome to My Running Journal</h2>
-            
+
             <p>Hello! I'm Justin, a casual runner based in Berkeley, CA. I grew up in Los Angeles and moved to Berkeley to pursue a PhD in chemistry.</p>
-            
-            <p>I started running during COVID in 2020 as a way to get out of the house and stay in shape. Since then, I've fallen in love with distance running.</p>
-            
+
+            <p>I started running during COVID in 2020 as a way to get out of the house and stay in shape. Since then, I've fallen in love with distance running. It has taken me to incredible places and taught me valuable lessons about perseverance, patience, and pushing beyond my limits.</p>
+
             <p>This site is my running journal where I mainly share detailed race reports and reflections from each marathon. Whether you're a fellow runner looking for course insights or just curious about the marathon experience, I hope you find something inspiring here.</p>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number">3</div>
-                    <div class="stat-label">Marathons Completed</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">3:10:52</div>
-                    <div class="stat-label">Personal Best</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">78.6</div>
-                    <div class="stat-label">Marathon Miles</div>
+            <div class="chart-section">
+                <div class="chart-label">My marathon progression</div>
+                <div class="chart-wrapper">
+                    <canvas id="progressChart" role="img"
+                        aria-label="Chart showing marathon finish times improving: 4:22:53 in May 2023, 3:31:51 in June 2025, and a PR of 3:10:52 in January 2026.">
+                        OC Marathon May 2023 — 4:22:53; Rock 'n' Roll San Diego Jun 2025 — 3:31:51; Carlsbad Jan 2026 — 3:10:52 (PR).
+                    </canvas>
+                    <div class="chart-tooltip" id="chartTooltip">
+                        <div class="tt-title" id="ttTitle"></div>
+                        <div class="tt-sub" id="ttSub"></div>
+                        <div class="tt-time" id="ttTime"></div>
+                        <div class="tt-pr" id="ttPr"></div>
+                    </div>
                 </div>
             </div>
-
-            <p>Check out my <a href="marathons.html" style="color: #667eea; text-decoration: none;">marathon reports</a> to read about my races, or feel free to <a href="https://www.strava.com/athletes/106999387" target="_blank" style="color: #667eea; text-decoration: none;">reach out</a> if you have any questions about the courses I've run.</p>
         </div>
     </main>
 
@@ -218,5 +175,302 @@
             <p>And let us run with perseverance the race marked out for us...</p>
         </div>
     </footer>
+
+    <script>
+        function timeToMinutes(t) {
+            const [h, m, s] = t.split(':').map(Number);
+            return h * 60 + m + s / 60;
+        }
+
+        function formatTime(totalMins) {
+            const h = Math.floor(totalMins / 60);
+            const m = Math.floor(totalMins % 60);
+            const s = Math.round((totalMins * 60) % 60);
+            return h + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+        }
+
+        function dateToX(dateStr) {
+            const [y, m, d] = dateStr.split('-').map(Number);
+            return y + (m - 1) / 12 + (d - 1) / 365;
+        }
+
+        const races = [
+            { name: 'OC Marathon',      date: '2023-05-07', time: '4:22:53', pr: false },
+            { name: "Rock 'n' Roll SD", date: '2025-06-01', time: '3:31:51', pr: false },
+            { name: 'Carlsbad',         date: '2026-01-18', time: '3:10:52', pr: true  },
+        ];
+
+        const racePoints = races.map(r => ({
+            x: dateToX(r.date),
+            y: timeToMinutes(r.time),
+            name: r.name,
+            date: r.date,
+            pr: r.pr,
+        }));
+
+        // Linear regression for trend line
+        const n = racePoints.length;
+        const sumX  = racePoints.reduce((a, p) => a + p.x, 0);
+        const sumY  = racePoints.reduce((a, p) => a + p.y, 0);
+        const sumXY = racePoints.reduce((a, p) => a + p.x * p.y, 0);
+        const sumX2 = racePoints.reduce((a, p) => a + p.x * p.x, 0);
+        const slope     = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+        const intercept = (sumY - slope * sumX) / n;
+        const trendY = x => slope * x + intercept;
+
+        const xMin = 2022.75;
+        const xMax = 2027.25;
+        const trendLine = [{ x: xMin, y: trendY(xMin) }, { x: xMax, y: trendY(xMax) }];
+
+        const tealColor = '#5cb8a0';
+        const starColor = '#3a7bd5';
+        const yearTicks = [2023, 2024, 2025, 2026, 2027];
+
+        // Ghost dot state
+        let ghostX = null, ghostY = null, ghostVisible = false;
+
+        const ghostPlugin = {
+            id: 'ghostDot',
+            afterDraw(chart) {
+                if (!ghostVisible || ghostX === null) return;
+                const ctx = chart.ctx;
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(ghostX, ghostY, 5, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(92,184,160,0.35)';
+                ctx.strokeStyle = tealColor;
+                ctx.lineWidth = 1.5;
+                ctx.fill();
+                ctx.stroke();
+                ctx.restore();
+            }
+        };
+
+        const starPlugin = {
+            id: 'starPoints',
+            afterDraw(chart) {
+                const ctx = chart.ctx;
+                const meta = chart.getDatasetMeta(1);
+                meta.data.forEach((pt, i) => {
+                    if (!racePoints[i].pr) return;
+                    const x = pt.x, y = pt.y, r = 9;
+                    ctx.save();
+                    ctx.translate(x, y);
+                    ctx.beginPath();
+                    for (let j = 0; j < 5; j++) {
+                        const outerA = (j * 4 * Math.PI / 5) - Math.PI / 2;
+                        const innerA = outerA + (Math.PI / 5);
+                        j === 0
+                            ? ctx.moveTo(Math.cos(outerA) * r, Math.sin(outerA) * r)
+                            : ctx.lineTo(Math.cos(outerA) * r, Math.sin(outerA) * r);
+                        ctx.lineTo(Math.cos(innerA) * r * 0.42, Math.sin(innerA) * r * 0.42);
+                    }
+                    ctx.closePath();
+                    ctx.fillStyle = starColor;
+                    ctx.fill();
+                    ctx.restore();
+                });
+            }
+        };
+
+        const chart = new Chart(document.getElementById('progressChart'), {
+            type: 'scatter',
+            plugins: [ghostPlugin, starPlugin],
+            data: {
+                datasets: [
+                    {
+                        label: 'Trend',
+                        data: trendLine,
+                        showLine: true,
+                        tension: 0,
+                        borderColor: tealColor,
+                        borderWidth: 1.5,
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        fill: false,
+                    },
+                    {
+                        label: 'Races',
+                        data: racePoints,
+                        showLine: false,
+                        pointRadius: racePoints.map(p => p.pr ? 0 : 5),
+                        pointHoverRadius: racePoints.map(p => p.pr ? 0 : 7),
+                        pointBackgroundColor: tealColor,
+                        pointBorderColor: tealColor,
+                        pointBorderWidth: 0,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }, // we handle tooltip manually
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        min: xMin,
+                        max: xMax,
+                        grid: { color: 'rgba(0,0,0,0.06)', lineWidth: 1 },
+                        border: { display: false },
+                        ticks: {
+                            color: '#bbb',
+                            font: { size: 12 },
+                            stepSize: 1,
+                            callback: val => {
+                                const r = Math.round(val * 100) / 100;
+                                return yearTicks.includes(Math.round(r)) && Math.abs(r - Math.round(r)) < 0.01 ? Math.round(r) : null;
+                            }
+                        }
+                    },
+                    y: {
+                        reverse: true,
+                        min: timeToMinutes('3:00:00'),
+                        max: timeToMinutes('4:45:00'),
+                        grid: { color: 'rgba(0,0,0,0.06)', lineWidth: 1 },
+                        border: { display: false },
+                        ticks: {
+                            color: '#bbb',
+                            font: { size: 12 },
+                            stepSize: 15,
+                            callback: val => {
+                                const h = Math.floor(val / 60);
+                                const m = Math.round(val % 60);
+                                return h + ':' + String(m).padStart(2, '0') + ':00';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // --- Interactivity ---
+        const canvas    = document.getElementById('progressChart');
+        const tooltip   = document.getElementById('chartTooltip');
+        const ttTitle   = document.getElementById('ttTitle');
+        const ttSub     = document.getElementById('ttSub');
+        const ttTime    = document.getElementById('ttTime');
+        const ttPr      = document.getElementById('ttPr');
+        const wrapper   = canvas.parentElement;
+
+        function getChartArea() { return chart.chartArea; }
+
+        // Convert canvas pixel x → data x value
+        function pixelToDataX(px) {
+            const area = getChartArea();
+            const scale = chart.scales.x;
+            return scale.getValueForPixel(px);
+        }
+
+        // Convert data x → canvas pixel x
+        function dataToPixelX(x) { return chart.scales.x.getPixelForValue(x); }
+        function dataToPixelY(y) { return chart.scales.y.getPixelForValue(y); }
+
+        // Check if a pixel is within the chart area
+        function inChartArea(px, py) {
+            const a = getChartArea();
+            return px >= a.left && px <= a.right && py >= a.top && py <= a.bottom;
+        }
+
+        // Find nearest race point to a pixel position
+        function nearestRace(px, py) {
+            let best = null, bestDist = Infinity;
+            racePoints.forEach(p => {
+                const cx = dataToPixelX(p.x);
+                const cy = dataToPixelY(p.y);
+                const dist = Math.hypot(px - cx, py - cy);
+                if (dist < bestDist) { bestDist = dist; best = { p, dist, cx, cy }; }
+            });
+            return bestDist < 22 ? best : null;
+        }
+
+        function showTooltip(p, canvasX, canvasY) {
+            const [y, m, d] = p.date.split('-').map(Number);
+            const date = new Date(y, m - 1, d);
+            const dayStr = d + ' ' + date.toLocaleString('en-US', { month: 'long' }) + ' ' + y;
+
+            ttTitle.textContent = p.name;
+            ttSub.textContent = dayStr;
+            ttTime.textContent = formatTime(p.y);
+            ttPr.textContent = p.pr ? 'Personal Best ★' : '';
+
+            // Position tooltip: prefer right of point, flip left if too close to edge
+            const wrapRect = wrapper.getBoundingClientRect();
+            const ttW = 160;
+            let left = canvasX + 14;
+            if (left + ttW > wrapper.offsetWidth - 10) left = canvasX - ttW - 14;
+            let top = canvasY - 20;
+
+            tooltip.style.left = left + 'px';
+            tooltip.style.top  = top + 'px';
+            tooltip.classList.add('visible');
+        }
+
+        function hideTooltip() {
+            tooltip.classList.remove('visible');
+        }
+
+        function handleMove(px, py) {
+            if (!inChartArea(px, py)) {
+                ghostVisible = false;
+                hideTooltip();
+                chart.draw();
+                return;
+            }
+
+            const hit = nearestRace(px, py);
+
+            if (hit) {
+                // Hovering near a race point — show tooltip, hide ghost
+                ghostVisible = false;
+                showTooltip(hit.p, hit.cx, hit.cy);
+            } else {
+                // Hovering on trend line area — show ghost dot, hide tooltip
+                hideTooltip();
+                const dataX = pixelToDataX(px);
+                const dataY = trendY(dataX);
+                const gx = dataToPixelX(dataX);
+                const gy = dataToPixelY(dataY);
+                const area = getChartArea();
+                if (gy >= area.top && gy <= area.bottom) {
+                    ghostX = gx;
+                    ghostY = gy;
+                    ghostVisible = true;
+                } else {
+                    ghostVisible = false;
+                }
+            }
+
+            chart.draw();
+        }
+
+        canvas.addEventListener('mousemove', e => {
+            const rect = canvas.getBoundingClientRect();
+            handleMove(e.clientX - rect.left, e.clientY - rect.top);
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            ghostVisible = false;
+            hideTooltip();
+            chart.draw();
+        });
+
+        // Touch support
+        canvas.addEventListener('touchmove', e => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const t = e.touches[0];
+            handleMove(t.clientX - rect.left, t.clientY - rect.top);
+        }, { passive: false });
+
+        canvas.addEventListener('touchend', () => {
+            ghostVisible = false;
+            hideTooltip();
+            chart.draw();
+        });
+    </script>
 </body>
 </html>
