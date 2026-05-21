@@ -15,6 +15,7 @@
             background: #fafafa;
         }
 
+        /* ── Header ── */
         header {
             background: white;
             border-bottom: 1px solid #e0e0e0;
@@ -37,6 +38,7 @@
         }
 
         .logo { font-size: 1.5rem; font-weight: 500; color: #333; }
+
         nav { display: flex; gap: 2rem; }
 
         .nav-link {
@@ -50,10 +52,50 @@
         .nav-link:hover { color: #667eea; }
         .nav-link.active { color: #667eea; font-weight: 500; }
 
+        /* ── Hamburger ── */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 4px;
+            background: none;
+            border: none;
+        }
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: #333;
+            border-radius: 2px;
+            transition: all 0.25s;
+        }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* Mobile nav drawer */
+        .mobile-nav {
+            display: none;
+            flex-direction: column;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            padding: 0.5rem 0;
+        }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav .nav-link {
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            border-bottom: 1px solid #f8f8f8;
+        }
+        .mobile-nav .nav-link:last-child { border-bottom: none; }
+
+        /* ── Hero ── */
         .hero { padding: 4rem 0; text-align: center; }
         .hero h1 { font-size: 3rem; font-weight: 300; letter-spacing: -0.5px; margin-bottom: 1rem; }
         .hero .subtitle { color: #666; font-size: 1.2rem; }
 
+        /* ── About card ── */
         .about-content {
             background: white;
             border-radius: 8px;
@@ -72,6 +114,7 @@
         }
         .about-content p:last-child { margin-bottom: 0; }
 
+        /* ── Chart ── */
         .chart-section { margin: 2.5rem 0 0; }
 
         .chart-label {
@@ -111,12 +154,35 @@
         .chart-tooltip .tt-time { font-weight: 700; color: #333; margin-top: 0.2rem; font-size: 0.95rem; }
         .chart-tooltip .tt-pr { color: #3a7bd5; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.1rem; }
 
+        /* ── Footer ── */
         footer { text-align: center; padding: 3rem 0; color: #999; font-size: 0.9rem; }
 
-        @media (max-width: 600px) {
-            .hero h1 { font-size: 2rem; }
-            .about-content { padding: 2rem; }
-            .header-content { flex-direction: column; gap: 1rem; }
+        /* ── Mobile styles ── */
+        @media (max-width: 640px) {
+            .hero { padding: 2.5rem 0; }
+            .hero h1 { font-size: 2.2rem; }
+
+            /* Hide desktop nav, show hamburger */
+            nav { display: none; }
+            .hamburger { display: flex; }
+
+            /* Card becomes borderless, flush to edges */
+            .about-content {
+                border-radius: 0;
+                padding: 1.75rem 1.25rem;
+                margin: 0;
+                box-shadow: none;
+                border-top: 1px solid #ebebeb;
+                border-bottom: 1px solid #ebebeb;
+            }
+
+            .about-content h2 { font-size: 1.4rem; }
+            .about-content p { font-size: 1rem; }
+
+            /* Shorter chart on mobile */
+            .chart-wrapper { height: 200px; }
+
+            footer { padding: 2rem 0; }
         }
     </style>
 </head>
@@ -131,8 +197,17 @@
                     <a href="blog.html" class="nav-link">Blog</a>
                     <a href="race-logs.html" class="nav-link">Race Log</a>
                 </nav>
+                <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
         </div>
+        <nav class="mobile-nav" id="mobileNav">
+            <a href="index.html" class="nav-link active">Home</a>
+            <a href="marathons.html" class="nav-link">Marathon Reports</a>
+            <a href="blog.html" class="nav-link">Blog</a>
+            <a href="race-logs.html" class="nav-link">Race Log</a>
+        </nav>
     </header>
 
     <div class="hero">
@@ -177,6 +252,15 @@
     </footer>
 
     <script>
+        // ── Hamburger ──
+        const hamburger = document.getElementById('hamburger');
+        const mobileNav = document.getElementById('mobileNav');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('open');
+            mobileNav.classList.toggle('open');
+        });
+
+        // ── Chart ──
         function timeToMinutes(t) {
             const [h, m, s] = t.split(':').map(Number);
             return h * 60 + m + s / 60;
@@ -208,7 +292,6 @@
             pr: r.pr,
         }));
 
-        // Linear regression for trend line
         const n = racePoints.length;
         const sumX  = racePoints.reduce((a, p) => a + p.x, 0);
         const sumY  = racePoints.reduce((a, p) => a + p.y, 0);
@@ -216,7 +299,7 @@
         const sumX2 = racePoints.reduce((a, p) => a + p.x * p.x, 0);
         const slope     = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
         const intercept = (sumY - slope * sumX) / n;
-        const trendY = x => slope * x + intercept;
+        const trendY    = x => slope * x + intercept;
 
         const xMin = 2022.75;
         const xMax = 2027.25;
@@ -226,7 +309,6 @@
         const starColor = '#3a7bd5';
         const yearTicks = [2023, 2024, 2025, 2026, 2027];
 
-        // Ghost dot state
         let ghostX = null, ghostY = null, ghostVisible = false;
 
         const ghostPlugin = {
@@ -307,7 +389,7 @@
                 animation: false,
                 plugins: {
                     legend: { display: false },
-                    tooltip: { enabled: false }, // we handle tooltip manually
+                    tooltip: { enabled: false },
                 },
                 scales: {
                     x: {
@@ -344,35 +426,24 @@
             }
         });
 
-        // --- Interactivity ---
-        const canvas    = document.getElementById('progressChart');
-        const tooltip   = document.getElementById('chartTooltip');
-        const ttTitle   = document.getElementById('ttTitle');
-        const ttSub     = document.getElementById('ttSub');
-        const ttTime    = document.getElementById('ttTime');
-        const ttPr      = document.getElementById('ttPr');
-        const wrapper   = canvas.parentElement;
+        // ── Interactivity ──
+        const canvas  = document.getElementById('progressChart');
+        const tooltip = document.getElementById('chartTooltip');
+        const ttTitle = document.getElementById('ttTitle');
+        const ttSub   = document.getElementById('ttSub');
+        const ttTime  = document.getElementById('ttTime');
+        const ttPr    = document.getElementById('ttPr');
+        const wrapper = canvas.parentElement;
 
-        function getChartArea() { return chart.chartArea; }
-
-        // Convert canvas pixel x → data x value
-        function pixelToDataX(px) {
-            const area = getChartArea();
-            const scale = chart.scales.x;
-            return scale.getValueForPixel(px);
-        }
-
-        // Convert data x → canvas pixel x
         function dataToPixelX(x) { return chart.scales.x.getPixelForValue(x); }
         function dataToPixelY(y) { return chart.scales.y.getPixelForValue(y); }
+        function pixelToDataX(px) { return chart.scales.x.getValueForPixel(px); }
 
-        // Check if a pixel is within the chart area
         function inChartArea(px, py) {
-            const a = getChartArea();
+            const a = chart.chartArea;
             return px >= a.left && px <= a.right && py >= a.top && py <= a.bottom;
         }
 
-        // Find nearest race point to a pixel position
         function nearestRace(px, py) {
             let best = null, bestDist = Infinity;
             racePoints.forEach(p => {
@@ -386,29 +457,22 @@
 
         function showTooltip(p, canvasX, canvasY) {
             const [y, m, d] = p.date.split('-').map(Number);
-            const date = new Date(y, m - 1, d);
+            const date   = new Date(y, m - 1, d);
             const dayStr = d + ' ' + date.toLocaleString('en-US', { month: 'long' }) + ' ' + y;
-
             ttTitle.textContent = p.name;
-            ttSub.textContent = dayStr;
-            ttTime.textContent = formatTime(p.y);
-            ttPr.textContent = p.pr ? 'Personal Best ★' : '';
+            ttSub.textContent   = dayStr;
+            ttTime.textContent  = formatTime(p.y);
+            ttPr.textContent    = p.pr ? 'Personal Best ★' : '';
 
-            // Position tooltip: prefer right of point, flip left if too close to edge
-            const wrapRect = wrapper.getBoundingClientRect();
-            const ttW = 160;
-            let left = canvasX + 14;
+            const ttW  = 160;
+            let left   = canvasX + 14;
             if (left + ttW > wrapper.offsetWidth - 10) left = canvasX - ttW - 14;
-            let top = canvasY - 20;
-
             tooltip.style.left = left + 'px';
-            tooltip.style.top  = top + 'px';
+            tooltip.style.top  = (canvasY - 20) + 'px';
             tooltip.classList.add('visible');
         }
 
-        function hideTooltip() {
-            tooltip.classList.remove('visible');
-        }
+        function hideTooltip() { tooltip.classList.remove('visible'); }
 
         function handleMove(px, py) {
             if (!inChartArea(px, py)) {
@@ -417,30 +481,23 @@
                 chart.draw();
                 return;
             }
-
             const hit = nearestRace(px, py);
-
             if (hit) {
-                // Hovering near a race point — show tooltip, hide ghost
                 ghostVisible = false;
                 showTooltip(hit.p, hit.cx, hit.cy);
             } else {
-                // Hovering on trend line area — show ghost dot, hide tooltip
                 hideTooltip();
                 const dataX = pixelToDataX(px);
-                const dataY = trendY(dataX);
+                const dataYVal = trendY(dataX);
                 const gx = dataToPixelX(dataX);
-                const gy = dataToPixelY(dataY);
-                const area = getChartArea();
-                if (gy >= area.top && gy <= area.bottom) {
-                    ghostX = gx;
-                    ghostY = gy;
-                    ghostVisible = true;
+                const gy = dataToPixelY(dataYVal);
+                const a  = chart.chartArea;
+                if (gy >= a.top && gy <= a.bottom) {
+                    ghostX = gx; ghostY = gy; ghostVisible = true;
                 } else {
                     ghostVisible = false;
                 }
             }
-
             chart.draw();
         }
 
@@ -448,25 +505,17 @@
             const rect = canvas.getBoundingClientRect();
             handleMove(e.clientX - rect.left, e.clientY - rect.top);
         });
-
         canvas.addEventListener('mouseleave', () => {
-            ghostVisible = false;
-            hideTooltip();
-            chart.draw();
+            ghostVisible = false; hideTooltip(); chart.draw();
         });
-
-        // Touch support
         canvas.addEventListener('touchmove', e => {
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
             const t = e.touches[0];
             handleMove(t.clientX - rect.left, t.clientY - rect.top);
         }, { passive: false });
-
         canvas.addEventListener('touchend', () => {
-            ghostVisible = false;
-            hideTooltip();
-            chart.draw();
+            ghostVisible = false; hideTooltip(); chart.draw();
         });
     </script>
 </body>

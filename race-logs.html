@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Race Log - Running Journal</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -27,224 +23,97 @@
             z-index: 100;
         }
 
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 500;
-            color: #333;
-        }
-
-        nav {
-            display: flex;
-            gap: 2rem;
-        }
-
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 500; color: #333; }
+        nav { display: flex; gap: 2rem; }
+        .nav-item { position: relative; }
         .nav-link {
-            color: #333;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            display: block;
-            font-size: 1rem;
-            transition: color 0.2s;
+            color: #333; text-decoration: none; padding: 0.5rem 1rem;
+            display: block; cursor: pointer; font-size: 1rem; transition: color 0.2s;
         }
+        .nav-link:hover { color: #667eea; }
+        .nav-link.active { color: #667eea; font-weight: 500; }
 
-        .nav-link:hover {
-            color: #667eea;
+        .hamburger {
+            display: none; flex-direction: column; gap: 5px;
+            cursor: pointer; padding: 4px; background: none; border: none;
         }
+        .hamburger span {
+            display: block; width: 22px; height: 2px;
+            background: #333; border-radius: 2px; transition: all 0.25s;
+        }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        .nav-link.active {
-            color: #667eea;
-            font-weight: 500;
+        .mobile-nav {
+            display: none; flex-direction: column;
+            background: white; border-top: 1px solid #f0f0f0; padding: 0.5rem 0;
         }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav .nav-link { padding: 0.75rem 2rem; border-bottom: 1px solid #f8f8f8; }
+        .mobile-nav .nav-link:last-child { border-bottom: none; }
 
-        .hero {
-            padding: 3rem 0;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            font-weight: 300;
-            letter-spacing: -0.5px;
-            margin-bottom: 0.5rem;
-        }
-
-        .hero .subtitle {
-            color: #666;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
+        .hero { padding: 3rem 0; text-align: center; margin-bottom: 2rem; }
+        .hero h1 { font-size: 2.5rem; font-weight: 300; letter-spacing: -0.5px; margin-bottom: 0.5rem; }
+        .hero .subtitle { color: #666; }
 
         .filter-buttons {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            justify-content: center;
+            display: flex; gap: 0.75rem; margin-bottom: 2rem;
+            flex-wrap: wrap; justify-content: center;
         }
-
         .filter-btn {
-            padding: 0.6rem 1.5rem;
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-            color: #333;
+            padding: 0.6rem 1.5rem; background: white; border: 2px solid #e0e0e0;
+            border-radius: 6px; cursor: pointer; font-size: 0.95rem;
+            transition: all 0.2s; color: #333;
         }
-
-        .filter-btn:hover {
-            border-color: #667eea;
-            color: #667eea;
-        }
-
-        .filter-btn.active {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
+        .filter-btn:hover { border-color: #667eea; color: #667eea; }
+        .filter-btn.active { background: #667eea; color: white; border-color: #667eea; }
 
         .race-log-table {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            background: white; border-radius: 8px;
+            overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: #f8f8f8;
-        }
-
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: #f8f8f8; }
         th {
-            padding: 1rem;
-            text-align: left;
-            font-weight: 500;
-            color: #666;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            padding: 1rem; text-align: left; font-weight: 500; color: #666;
+            font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;
             border-bottom: 2px solid #e0e0e0;
         }
-
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        tbody tr:hover {
-            background: #fafafa;
-        }
-
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
+        td { padding: 1rem; border-bottom: 1px solid #f0f0f0; }
+        tbody tr:hover { background: #fafafa; }
+        tbody tr:last-child td { border-bottom: none; }
 
         .pr-badge {
-            display: inline-block;
-            background: #ffd700;
-            color: #333;
-            padding: 0.25rem 0.6rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            display: inline-block; background: #ffd700; color: #333;
+            padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.75rem;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
         }
-
         .distance-badge {
-            display: inline-block;
-            padding: 0.3rem 0.7rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 500;
+            display: inline-block; padding: 0.3rem 0.7rem;
+            border-radius: 4px; font-size: 0.85rem; font-weight: 500;
         }
+        .distance-marathon { background: #667eea; color: white; }
+        .distance-half { background: #f093fb; color: white; }
+        .distance-10k { background: #4facfe; color: white; }
+        .distance-5k { background: #43e97b; color: white; }
+        .notes-cell { color: #666; font-size: 0.9rem; max-width: 300px; }
+        .no-results { text-align: center; padding: 3rem; color: #999; }
 
-        .distance-marathon {
-            background: #667eea;
-            color: white;
-        }
+        footer { text-align: center; padding: 3rem 0; color: #999; font-size: 0.9rem; margin-top: 3rem; }
 
-        .distance-half {
-            background: #f093fb;
-            color: white;
-        }
-
-        .distance-10k {
-            background: #4facfe;
-            color: white;
-        }
-
-        .distance-5k {
-            background: #43e97b;
-            color: white;
-        }
-
-        .notes-cell {
-            color: #666;
-            font-size: 0.9rem;
-            max-width: 300px;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 3rem;
-            color: #999;
-        }
-
-        footer {
-            text-align: center;
-            padding: 3rem 0;
-            color: #999;
-            font-size: 0.9rem;
-            margin-top: 3rem;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
-            }
-
-            .race-log-table {
-                overflow-x: auto;
-            }
-
-            table {
-                min-width: 700px;
-            }
-
-            .filter-buttons {
-                justify-content: flex-start;
-            }
-
-            .filter-btn {
-                padding: 0.5rem 1rem;
-                font-size: 0.85rem;
-            }
-
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            nav {
-                gap: 1rem;
-            }
+        @media (max-width: 640px) {
+            nav { display: none; }
+            .hamburger { display: flex; }
+            .hero { padding: 2rem 0 1rem; }
+            .hero h1 { font-size: 2rem; }
+            .container { padding: 0 1rem; }
+            .race-log-table { overflow-x: auto; }
+            table { min-width: 700px; }
+            .filter-buttons { justify-content: flex-start; }
+            .filter-btn { padding: 0.5rem 1rem; font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -254,13 +123,22 @@
             <div class="header-content">
                 <div class="logo">Running Journal</div>
                 <nav>
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="marathons.html" class="nav-link">Marathon Reports</a>
-                    <a href="blog.html" class="nav-link">Blog</a>
-                    <a href="race-logs.html" class="nav-link active">Race Log</a>
+                    <div class="nav-item"><a href="index.html" class="nav-link">Home</a></div>
+                    <div class="nav-item"><a href="marathons.html" class="nav-link">Marathon Reports</a></div>
+                    <div class="nav-item"><a href="blog.html" class="nav-link">Blog</a></div>
+                    <div class="nav-item"><a href="race-logs.html" class="nav-link active">Race Log</a></div>
                 </nav>
+                <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
         </div>
+        <nav class="mobile-nav" id="mobileNav">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="marathons.html" class="nav-link">Marathon Reports</a>
+            <a href="blog.html" class="nav-link">Blog</a>
+            <a href="race-logs.html" class="nav-link active">Race Log</a>
+        </nav>
     </header>
 
     <div class="hero">
@@ -292,12 +170,9 @@
                         <th>Notes</th>
                     </tr>
                 </thead>
-                <tbody id="raceTableBody">
-                </tbody>
+                <tbody id="raceTableBody"></tbody>
             </table>
-            <div id="noResults" class="no-results" style="display: none;">
-                No races found for this filter.
-            </div>
+            <div id="noResults" class="no-results" style="display: none;">No races found for this filter.</div>
         </div>
     </main>
 
@@ -308,169 +183,57 @@
     </footer>
 
     <script>
+        document.getElementById('hamburger').addEventListener('click', function() {
+            this.classList.toggle('open');
+            document.getElementById('mobileNav').classList.toggle('open');
+        });
+
         const races = [
-            {
-                date: '2026-01-18',
-                location: 'Carlsbad, CA',
-                race: 'Carlsbad Marathon',
-                distance: 'marathon',
-                time: '3:10:52',
-                pace: '7:17/mi',
-                notes: 'My aerobic base is solid, but my speedwork is lacking.',
-                isPR: true
-            },
-            {
-                date: '2025-06-01',
-                location: 'San Diego, CA',
-                race: 'Rock \'n\' Roll San Diego Marathon',
-                distance: 'marathon',
-                time: '3:31:51',
-                pace: '8:06/mi',
-                notes: 'So close to 3:30, but huge 50 minute PR.',
-                isPR: false
-            },
-            {
-                date: '2023-05-07',
-                location: 'Costa Mesa, CA',
-                race: 'Orange County Marathon',
-                distance: 'marathon',
-                time: '4:22:53',
-                pace: '10:02/mi',
-                notes: 'First ever marathon! I was definitely underprepared.',
-                isPR: false
-            },
-            {
-                date: '2022-09-11',
-                location: 'Santa Monica, CA',
-                race: 'Santa Monica Classic 10K',
-                distance: '10k',
-                time: '56:40',
-                pace: '9:08/mi',
-                notes: 'First ever race! Cramped near the end.',
-                isPR: true
-            },
-            {
-                date: '2022-11-06',
-                location: 'Malibu, CA',
-                race: 'Run Malibu 5K',
-                distance: '5k',
-                time: '23:37',
-                pace: '7:36/mi',
-                notes: 'Ran with a friend from college.',
-                isPR: false
-            },
-            {
-                date: '2023-01-15',
-                location: 'Pasadena, CA',
-                race: 'Rose Bowl Half Marathon',
-                distance: 'half',
-                time: '1:57:54',
-                pace: '9:00/mi',
-                notes: 'Achieved my sub-2 time goal.',
-                isPR: false
-            },
-            {
-                date: '2023-03-26',
-                location: 'Irvine, CA',
-                race: 'Reaching for the Cure 5K',
-                distance: '5k',
-                time: '21:04',
-                pace: '6:46/mi',
-                notes: 'I never ran that fast before ouch.',
-                isPR: true
-            },
-            {
-                date: '2023-10-15',
-                location: 'Long Beach, CA',
-                race: 'Long Beach Half Marathon',
-                distance: 'half',
-                time: '1:44:54',
-                pace: '8:00/mi',
-                notes: 'First time experiencing runner\'s high. Probably my best race to date.',
-                isPR: true
-            },
-            {
-                date: '2024-01-21',
-                location: 'Pasadena, CA',
-                race: 'Rose Bowl Half Marathon',
-                distance: 'half',
-                time: '2:50:54',
-                pace: '13:03/mi',
-                notes: 'Accompanied a friend in her first half marathon.',
-                isPR: false
-            }
+            { date: '2026-01-18', location: 'Carlsbad, CA', race: 'Carlsbad Marathon', distance: 'marathon', time: '3:10:52', pace: '7:17/mi', notes: 'My aerobic base is solid, but my speedwork is lacking.', isPR: true },
+            { date: '2025-06-01', location: 'San Diego, CA', race: "Rock 'n' Roll San Diego Marathon", distance: 'marathon', time: '3:31:51', pace: '8:06/mi', notes: 'So close to 3:30, but huge 50 minute PR.', isPR: false },
+            { date: '2023-05-07', location: 'Costa Mesa, CA', race: 'Orange County Marathon', distance: 'marathon', time: '4:22:53', pace: '10:02/mi', notes: 'First ever marathon! I was definitely underprepared.', isPR: false },
+            { date: '2022-09-11', location: 'Santa Monica, CA', race: 'Santa Monica Classic 10K', distance: '10k', time: '56:40', pace: '9:08/mi', notes: 'First ever race! Cramped near the end.', isPR: true },
+            { date: '2022-11-06', location: 'Malibu, CA', race: 'Run Malibu 5K', distance: '5k', time: '23:37', pace: '7:36/mi', notes: 'Ran with a friend from college.', isPR: false },
+            { date: '2023-01-15', location: 'Pasadena, CA', race: 'Rose Bowl Half Marathon', distance: 'half', time: '1:57:54', pace: '9:00/mi', notes: 'Achieved my sub-2 time goal.', isPR: false },
+            { date: '2023-03-26', location: 'Irvine, CA', race: 'Reaching for the Cure 5K', distance: '5k', time: '21:04', pace: '6:46/mi', notes: 'I never ran that fast before ouch.', isPR: true },
+            { date: '2023-10-15', location: 'Long Beach, CA', race: 'Long Beach Half Marathon', distance: 'half', time: '1:44:54', pace: '8:00/mi', notes: "First time experiencing runner's high. Probably my best race to date.", isPR: true },
+            { date: '2024-01-21', location: 'Pasadena, CA', race: 'Rose Bowl Half Marathon', distance: 'half', time: '2:50:54', pace: '13:03/mi', notes: 'Accompanied a friend in her first half marathon.', isPR: false },
         ];
 
         races.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         function formatDate(dateString) {
             const [year, month, day] = dateString.split('-').map(Number);
-            const date = new Date(year, month - 1, day);
-            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            return new Date(year, month - 1, day).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
         }
 
-        function getDistanceClass(distance) {
-            const classes = {
-                'marathon': 'distance-marathon',
-                'half': 'distance-half',
-                '10k': 'distance-10k',
-                '5k': 'distance-5k'
-            };
-            return classes[distance] || '';
-        }
-
-        function getDistanceLabel(distance) {
-            const labels = {
-                'marathon': 'Marathon',
-                'half': 'Half Marathon',
-                '10k': '10K',
-                '5k': '5K'
-            };
-            return labels[distance] || distance;
-        }
+        const distanceClasses = { marathon: 'distance-marathon', half: 'distance-half', '10k': 'distance-10k', '5k': 'distance-5k' };
+        const distanceLabels  = { marathon: 'Marathon', half: 'Half Marathon', '10k': '10K', '5k': '5K' };
 
         function renderRaces(filter = 'all') {
             const tbody = document.getElementById('raceTableBody');
             const noResults = document.getElementById('noResults');
             tbody.innerHTML = '';
-
-            const filteredRaces = filter === 'all'
-                ? races
-                : races.filter(race => race.distance === filter);
-
-            if (filteredRaces.length === 0) {
-                noResults.style.display = 'block';
-                return;
-            }
-
+            const filtered = filter === 'all' ? races : races.filter(r => r.distance === filter);
+            if (!filtered.length) { noResults.style.display = 'block'; return; }
             noResults.style.display = 'none';
-
-            filteredRaces.forEach(race => {
+            filtered.forEach(r => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${formatDate(race.date)}</td>
-                    <td>${race.location}</td>
-                    <td>
-                        ${race.race}
-                        ${race.isPR ? '<span class="pr-badge">PR</span>' : ''}
-                    </td>
-                    <td>
-                        <span class="distance-badge ${getDistanceClass(race.distance)}">
-                            ${getDistanceLabel(race.distance)}
-                        </span>
-                    </td>
-                    <td><strong>${race.time}</strong></td>
-                    <td>${race.pace}</td>
-                    <td class="notes-cell">${race.notes || '-'}</td>
+                    <td>${formatDate(r.date)}</td>
+                    <td>${r.location}</td>
+                    <td>${r.race} ${r.isPR ? '<span class="pr-badge">PR</span>' : ''}</td>
+                    <td><span class="distance-badge ${distanceClasses[r.distance]}">${distanceLabels[r.distance]}</span></td>
+                    <td><strong>${r.time}</strong></td>
+                    <td>${r.pace}</td>
+                    <td class="notes-cell">${r.notes || '-'}</td>
                 `;
                 tbody.appendChild(row);
             });
         }
 
         function filterRaces(distance) {
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
             renderRaces(distance);
         }
