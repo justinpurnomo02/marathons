@@ -320,10 +320,7 @@
                             color: '#bbb',
                             font: { size: 12 },
                             stepSize: 1,
-                            callback: val => {
-                                const r = Math.round(val * 100) / 100;
-                                return yearTicks.includes(Math.round(r)) && Math.abs(r - Math.round(r)) < 0.01 ? Math.round(r) : null;
-                            }
+                            callback: val => yearTicks.includes(Math.round(val)) && Math.abs(val - Math.round(val)) < 0.5 ? Math.round(val) : null,
                         }
                     },
                     y: {
