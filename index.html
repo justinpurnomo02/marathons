@@ -231,8 +231,8 @@
                 <div class="chart-label">My marathon progression</div>
                 <div class="chart-wrapper">
                     <canvas id="progressChart" role="img"
-                        aria-label="Chart showing marathon finish times improving: 4:22:53 in May 2023, 3:31:51 in June 2025, and a PR of 3:10:52 in January 2026.">
-                        OC Marathon May 2023 — 4:22:53; Rock 'n' Roll San Diego Jun 2025 — 3:31:51; Carlsbad Jan 2026 — 3:10:52 (PR).
+                        aria-label="Chart showing marathon finish times improving: 4:22:53 in May 2023, 3:31:51 in June 2025, 3:10:52 in January 2026, and a PR of 3:09:41 in August 2026.">
+                        OC Marathon May 2023 — 4:22:53; Rock 'n' Roll San Diego Jun 2025 — 3:31:51; Carlsbad Jan 2026 — 3:10:52; Santa Rosa Aug 2026 — 3:09:41 (PR).
                     </canvas>
                     <div class="chart-tooltip" id="chartTooltip">
                         <div class="tt-title" id="ttTitle"></div>
@@ -281,7 +281,8 @@
         const races = [
             { name: 'OC Marathon',      date: '2023-05-07', time: '4:22:53', pr: false },
             { name: "Rock 'n' Roll SD", date: '2025-06-01', time: '3:31:51', pr: false },
-            { name: 'Carlsbad',         date: '2026-01-18', time: '3:10:52', pr: true  },
+            { name: 'Carlsbad',         date: '2026-01-18', time: '3:10:52', pr: false },
+            { name: 'Santa Rosa',       date: '2026-08-23', time: '3:09:41', pr: true  },
         ];
 
         const racePoints = races.map(r => ({
